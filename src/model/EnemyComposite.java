@@ -12,7 +12,7 @@ public class EnemyComposite extends GameElement {
     public static final int NROW = 2;
     public static final int NCOLS = 10;
     public static final int ENEMY_SIZE = 20;
-    public static final int UNIT_MOVE = 5; 
+    public int UNIT_MOVE = 5;                     // remove static from unit move
 
     private ArrayList<ArrayList<GameElement>> rows; 
     private ArrayList<GameElement> bombs;
@@ -195,7 +195,7 @@ public class EnemyComposite extends GameElement {
         var removeBullets = new ArrayList<GameElement>();
 
         // bullets vs enemies 
-        GameElement elem=new Bullet(-1,-1,Color.red);
+        GameElement elem = new Bullet(-1,-1,Color.red);
 
         for (var row: rows)
         {
@@ -204,29 +204,30 @@ public class EnemyComposite extends GameElement {
                 for (var bullet: shooter.getWeapons())
                 {
 
-                    if (enemy.collideWith(bullet))
+                    if (enemy.collideWith(bullet))                            // enemy collision with blue bullet
                     {
-                        System.out.println(enemy.x+","+enemy.y);
-                        if(bullet.color==Color.blue)
+                        System.out.println(enemy.x +","+ enemy.y);           // location of destroyed enemy (x,y)
+
+                        if (bullet.color == Color.blue)
                         {
                             for (var ro: rows)
                             {
 
                                 for (var enem : ro)
                                 {
-                                    if(enem.x==enemy.x&&enem!=enemy)
+                                    if(enem.x == enemy.x && enem != enemy)         // blue bullet can destroy two enemies
                                     {
                                         removeEnemies.add(enem);
                                         score = shooter.getScore();
-                                        shooter.setScore(score+=10);
+                                        shooter.setScore(score += 10);            // blue bullet hit adds additional 10 points
                                     }
                                 }
                             }
                                 for (var component: shooter.getComponents())
                                 {
-                                    if(component.ispresent==false)
+                                    if(component.ispresent == false)
                                     {
-                                        component.ispresent=true;
+                                        component.ispresent = true;            // restore a component of shooter
                                         break;
                                     }
                                 }
@@ -246,50 +247,22 @@ public class EnemyComposite extends GameElement {
             rows.get(1).removeAll(removeEnemies);
 
         }
-//        for (var row: rows) {
-//            var removeEnemies = new ArrayList<GameElement>();
-//            for (var enemy: row) {
-//
-//                {
-//                    if (enemy.collideWith(elem))
-//                    {
-//                        score = shooter.getScore();
-//                        shooter.setScore(score+=10);
-//                        removeEnemies.add(enemy);
-//                    }
-//                }
-//            }
-//
-//            row.removeAll(removeEnemies);
-//        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         shooter.getWeapons().removeAll(removeBullets);
 
 
+        // point loss for bomb hits on shooter
         var removeBombs = new ArrayList<GameElement>();
         for (var b: bombs) {
             for (var component: shooter.getComponents()) {
                 if (component.collideWith(b))
                 {
-                   component.ispresent=false;
-                     if(score>=20)
-                     shooter.setScore(score-=20);
+                   component.ispresent = false;
+
+                     if (score >= 20)
+                        shooter.setScore(score-=20);
+
                      else if(score>=10)
                          shooter.setScore(score-=10);
 
@@ -301,21 +274,19 @@ public class EnemyComposite extends GameElement {
 
         }
 
-
         if (areAllEnemiesDestroyed()) {
             win = true;
         }
 
 
-
-        boolean found=false;
+        boolean found = false;
         for (var component: shooter.getComponents())
         {
-            if(component.ispresent)
-                found=true;
+            if (component.ispresent)
+                found = true;
         }
         if(!found)
-            lostGame=true;
+            lostGame = true;
 
         // bullets vs bombs
 
@@ -333,6 +304,19 @@ public class EnemyComposite extends GameElement {
 
         shooter.getWeapons().removeAll(removeBullets);
         bombs.removeAll(removeBombs);
+
+    }
+
+    public int getLength() {
+        int length = 0;
+        for (ArrayList<GameElement> lis : rows) {
+            length += lis.size();
+        }
+        return length;
+    }
+
+    public void setSpeed(int speed) {
+        UNIT_MOVE = speed;
 
     }
 }

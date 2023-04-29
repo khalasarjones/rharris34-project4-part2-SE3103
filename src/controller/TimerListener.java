@@ -14,16 +14,23 @@ public class TimerListener implements ActionListener{
     public enum EventType {
         KEY_RIGHT, KEY_LEFT, KEY_SPACE
     }
-    static int nn=0;
+    static int n = 0;
     private GameBoard gameBoard;
     private LinkedList<EventType> eventQueue;
     private final int BOMB_DROP_FREQ = 20;
     private int frameCounter = 0;
 
+    private BoxSpeedController speed;
+
 
     public TimerListener(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
+        speed = new BoxSpeedController(20);             // create new box speed object
         eventQueue = new LinkedList<>();
+    }
+
+    public void setSpeedEnemy(){
+        gameBoard.getEnemyComposite().setSpeed(speed.getCurrentState().speed());    // speed state of enemies method
     }
 
     @Override
@@ -54,9 +61,9 @@ public class TimerListener implements ActionListener{
                 case KEY_SPACE:
                     if (shooter.canFireMoreBullet())
                     {
-                        nn++;
-                        if(shooter.weapons.size()==2) {
-                            shooter.getWeapons().add(new Bullet(shooter.x, shooter.y, Color.blue));
+                        n++;
+                        if(shooter.weapons.size() == 2) {
+                            shooter.getWeapons().add(new Bullet(shooter.x, shooter.y, Color.blue));   // blue bullet for third shot
                         }
                         else
                         shooter.getWeapons().add(new Bullet(shooter.x, shooter.y, Color.red));
@@ -74,6 +81,9 @@ public class TimerListener implements ActionListener{
     private void processCollision() {
         var shooter = gameBoard.getShooter();
         var enemyComposite = gameBoard.getEnemyComposite();
+
+        speed.setNumberOfBoxes(enemyComposite.getLength());                        // establish speed state in collision
+        gameBoard.getEnemyComposite().setSpeed(speed.getCurrentState().speed());
 
         shooter.removeBulletsOutofBound();
         enemyComposite.removeBombsOutOfBounds();
