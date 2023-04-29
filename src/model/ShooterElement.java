@@ -7,7 +7,8 @@ public class ShooterElement extends GameElement{
 
     public static final int SIZE = 20;
     public ShooterElement(int x, int y, Color color, boolean filled) {
-        super(x, y, color, filled, SIZE, SIZE);ispresent=true;
+        super(x, y, color, filled, SIZE, SIZE);
+        ispresent = true;                                               // all components are present
     }
 
     @Override

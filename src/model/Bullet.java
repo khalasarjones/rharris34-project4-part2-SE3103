@@ -8,9 +8,9 @@ public class Bullet extends GameElement
 
     public static final int WIDTH = 5;
     public static final int UNIT_MOVE = 10;
-    public Bullet(int x, int y,Color c) {
+    public Bullet(int x, int y, Color c) {           // add color parameter to bullet constructor
         super(x, y, c, true, WIDTH, WIDTH*3);
-        color=c;
+        color = c;
     }
 
     @Override
